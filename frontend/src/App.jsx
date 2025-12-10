@@ -11,8 +11,8 @@ function App() {
   const handleGenerate = async (settings) => {
     setLoading(true);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-      const response = await axios.post(`${API_URL}/api/generate`, settings);
+      // Use relative path for Vercel Monorepo
+      const response = await axios.post('/api/generate', settings);
       setCalendar(response.data);
     } catch (error) {
       console.error("Error generating calendar:", error);
