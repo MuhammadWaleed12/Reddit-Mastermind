@@ -103,6 +103,9 @@ The response contains a `week_number` and a list of scheduled posts with day, su
 
 ## Quality and limitations
 
+- Backend inputs reject empty personas, subreddits, queries, and non-positive post counts before planning starts.
+- Unit tests cover input validation, schedule size and ordering, subreddit distribution, persona separation, and model defaults.
+- GitHub Actions runs the backend tests plus frontend lint and production build checks.
 - Content selection currently uses Python's `random` module and reusable mock templates.
 - The API allows all CORS origins for development; restrict this before production use.
 - The prototype does not publish content to Reddit.
@@ -110,7 +113,6 @@ The response contains a `week_number` and a list of scheduled posts with day, su
 
 ## Roadmap
 
-- Add deterministic planner unit tests.
 - Introduce an interchangeable LLM provider interface.
 - Add persistence for saved calendars.
 - Add export to JSON and CSV.

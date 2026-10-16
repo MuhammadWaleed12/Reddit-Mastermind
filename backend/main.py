@@ -1,8 +1,10 @@
 """
 Entry point for the Reddit Mastermind Backend API.
 """
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from models import InputData, WeekCalendar
 from planner import Planner
 
@@ -18,6 +20,7 @@ app.add_middleware(
 )
 
 planner = Planner()
+
 
 @app.post("/api/generate", response_model=WeekCalendar)
 async def generate_calendar(data: InputData):

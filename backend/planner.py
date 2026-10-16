@@ -1,40 +1,53 @@
 """
 Core logic for planning the Reddit content calendar.
 """
-import random
-from typing import List, Dict, Set
-from models import InputData, WeekCalendar, Post, Comment
 
-DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+import random
+
+from models import Comment, InputData, Post, WeekCalendar
+
+DAYS_OF_WEEK = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+]
+
 
 class MockLLM:
     """Simulates LLM generation for content."""
 
     @staticmethod
-    def generate_post_content(topic: str, persona: str, company: str) -> Dict[str, str]:
+    def generate_post_content(topic: str, persona: str, company: str) -> dict[str, str]:
         """Generates a mock post title and body."""
         titles = [
             f"Question about {topic}?",
             f"Has anyone tried {company} for {topic}?",
             f"My experience with {topic} so far...",
             f"Why is {topic} so hard?",
-            f"Looking for advice on {topic}"
+            f"Looking for advice on {topic}",
         ]
         bodies = [
-            f"I've been looking into {topic} and I'm a bit stuck. "
-            f"I heard about {company} but want to know if it's legit.",
-            f"Hey everyone, just wondering if {topic} is worth the hype. "
-            f"I'm a {persona} and I need a solution.",
+            (
+                f"I've been looking into {topic} and I'm a bit stuck. "
+                f"I heard about {company} but want to know if it's legit."
+            ),
+            (
+                f"Hey everyone, just wondering if {topic} is worth the hype. "
+                f"I'm a {persona} and I need a solution."
+            ),
             f"Just a quick rant about {topic}. Why does nobody talk about the real issues?",
             f"I found this tool {company} while searching for {topic}. Thoughts?",
         ]
-        return {
-            "title": random.choice(titles),
-            "content": random.choice(bodies)
-        }
+        return {"title": random.choice(titles), "content": random.choice(bodies)}
 
     @staticmethod
-    def generate_comment(post_title: str, persona: str, sentiment: str = "neutral") -> str:
+    def generate_comment(
+        post_title: str, persona: str, sentiment: str = "neutral"
+    ) -> str:
         """Generates a mock comment."""
         # Unused arguments for now, but keeping signature for future expansion
         _ = (post_title, sentiment)
@@ -44,9 +57,10 @@ class MockLLM:
             "Have you tried checking the wiki?",
             "I used to have this issue too.",
             "This checks out.",
-            "Big if true."
+            "Big if true.",
         ]
         return random.choice(comments)
+
 
 class Planner:
     """Orchestrates the creation of the content calendar."""
@@ -56,7 +70,7 @@ class Planner:
 
     def generate_week(self, data: InputData, week_offset: int = 0) -> WeekCalendar:
         """Generates a full week of posts based on input data."""
-        posts: List[Post] = []
+        posts: list[Post] = []
 
         # Determine slots
         # Evenly distribute posts across the week
@@ -77,14 +91,13 @@ class Planner:
 
         # Track usage to avoid "Overposting in a subreddit"
         # dict: day -> set(subreddits)
-        usage_tracker: Dict[str, Set[str]] = {day: set() for day in DAYS_OF_WEEK}
+        usage_tracker: dict[str, set[str]] = {day: set() for day in DAYS_OF_WEEK}
 
         for day in slots:
             # 1. Select Subreddit
             # Try to find a subreddit not used today
             available_subs = [
-                s.name for s in data.subreddits
-                if s.name not in usage_tracker[day]
+                s.name for s in data.subreddits if s.name not in usage_tracker[day]
             ]
             if not available_subs:
                 # Fallback: just pick any
@@ -110,7 +123,9 @@ class Planner:
             comments = []
             other_personas = [p for p in data.personas if p.name != op_persona.name]
             # pylint: disable=line-too-long
-            num_comments = random.randint(1, min(3, len(other_personas))) if other_personas else 0
+            num_comments = (
+                random.randint(1, min(3, len(other_personas))) if other_personas else 0
+            )
 
             for _ in range(num_comments):
                 commenter = random.choice(other_personas)
@@ -123,7 +138,7 @@ class Planner:
                 author=op_persona.name,
                 title=content_data["title"],
                 content=content_data["content"],
-                comments=comments
+                comments=comments,
             )
             posts.append(post)
 

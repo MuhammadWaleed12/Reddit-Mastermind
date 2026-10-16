@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { MessageSquare, User } from 'lucide-react';
 
 const CalendarView = ({ calendar, onReset }) => {
@@ -19,7 +19,7 @@ const CalendarView = ({ calendar, onReset }) => {
 
             <div className="grid grid-cols-1 gap-6">
                 {calendar.posts.map((post, index) => (
-                    <motion.div
+                    <Motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -67,7 +67,7 @@ const CalendarView = ({ calendar, onReset }) => {
                                 </div>
                             )}
                         </div>
-                    </motion.div>
+                    </Motion.div>
                 ))}
             </div>
         </div>

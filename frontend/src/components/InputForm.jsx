@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Sparkles } from 'lucide-react';
 
 const InputForm = ({ onSubmit, isLoading }) => {
@@ -48,7 +48,7 @@ const InputForm = ({ onSubmit, isLoading }) => {
     };
 
     return (
-        <motion.form
+        <Motion.form
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-8 border border-white/20 max-w-2xl mx-auto"
@@ -98,7 +98,7 @@ const InputForm = ({ onSubmit, isLoading }) => {
                 </div>
                 <AnimatePresence>
                     {personas.map((p, i) => (
-                        <motion.div
+                        <Motion.div
                             key={i}
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
@@ -114,7 +114,7 @@ const InputForm = ({ onSubmit, isLoading }) => {
                             <button type="button" onClick={() => removePersona(i)} className="text-slate-400 hover:text-red-500 transition-colors">
                                 <Trash2 size={18} />
                             </button>
-                        </motion.div>
+                        </Motion.div>
                     ))}
                 </AnimatePresence>
             </section>
@@ -161,7 +161,7 @@ const InputForm = ({ onSubmit, isLoading }) => {
                 </div>
                 <div className="space-y-2">
                     {queries.map((q, i) => (
-                        <motion.div
+                        <Motion.div
                             key={i}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -176,7 +176,7 @@ const InputForm = ({ onSubmit, isLoading }) => {
                             <button type="button" onClick={() => removeQuery(i)} className="text-slate-400 hover:text-red-500 transition-colors">
                                 <Trash2 size={18} />
                             </button>
-                        </motion.div>
+                        </Motion.div>
                     ))}
                 </div>
             </section>
@@ -207,7 +207,7 @@ const InputForm = ({ onSubmit, isLoading }) => {
                     </>
                 )}
             </button>
-        </motion.form>
+        </Motion.form>
     );
 };
 
