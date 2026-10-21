@@ -4,7 +4,7 @@ A full-stack content-planning prototype that turns company context, audience per
 
 [View the deployed frontend](https://reddit-mastermind-wine.vercel.app)
 
-> **Current scope:** the backend uses a deterministic local `MockLLM` content generator. No paid model API or external AI service is required.
+> **Current scope:** the backend defaults to a local `MockLLM` content generator. No paid model API or external AI service is required. `Planner` accepts any provider that implements the typed `ContentGenerator` contract, so a real model adapter can be added without changing scheduling logic.
 
 ## What it does
 
@@ -113,7 +113,7 @@ The response contains a `week_number` and a list of scheduled posts with day, su
 
 ## Roadmap
 
-- Introduce an interchangeable LLM provider interface.
+- Add production model-provider adapters behind the existing `ContentGenerator` interface.
 - Add persistence for saved calendars.
 - Add export to JSON and CSV.
 - Harden CORS and deployment configuration.

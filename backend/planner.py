@@ -3,6 +3,7 @@ Core logic for planning the Reddit content calendar.
 """
 
 import random
+from typing import Protocol
 
 from models import Comment, InputData, Post, WeekCalendar
 
@@ -15,6 +16,22 @@ DAYS_OF_WEEK = [
     "Saturday",
     "Sunday",
 ]
+
+
+class ContentGenerator(Protocol):
+    """Contract for content providers used by the planner."""
+
+    def generate_post_content(
+        self, topic: str, persona: str, company: str
+    ) -> dict[str, str]:
+        """Return a title and body for a planned post."""
+        ...
+
+    def generate_comment(
+        self, post_title: str, persona: str, sentiment: str = "neutral"
+    ) -> str:
+        """Return a comment for a planned post."""
+        ...
 
 
 class MockLLM:
@@ -65,8 +82,8 @@ class MockLLM:
 class Planner:
     """Orchestrates the creation of the content calendar."""
 
-    def __init__(self):
-        pass
+    def __init__(self, content_generator: ContentGenerator | None = None):
+        self.content_generator = content_generator or MockLLM()
 
     def generate_week(self, data: InputData, week_offset: int = 0) -> WeekCalendar:
         """Generates a full week of posts based on input data."""
@@ -114,7 +131,7 @@ class Planner:
             topic = random.choice(data.queries)
 
             # 4. Generate Content
-            content_data = MockLLM.generate_post_content(
+            content_data = self.content_generator.generate_post_content(
                 topic, op_persona.name, data.company_info.name
             )
 
@@ -129,7 +146,9 @@ class Planner:
 
             for _ in range(num_comments):
                 commenter = random.choice(other_personas)
-                c_text = MockLLM.generate_comment(content_data["title"], commenter.name)
+                c_text = self.content_generator.generate_comment(
+                    content_data["title"], commenter.name
+                )
                 comments.append(Comment(author=commenter.name, content=c_text))
 
             post = Post(
